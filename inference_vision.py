@@ -75,7 +75,7 @@ def load_clip_model(ckpt_dir, device):
     
 class OmniVisionInference(OmniInference):
 
-    def __init__(self, ckpt_dir='./checkpoint', device='cuda:0'):
+    def __init__(self, ckpt_dir='./checkpoint', device='cpu'):
         self.device = device
         if not os.path.exists(ckpt_dir):
             print(f"checkpoint directory {ckpt_dir} not found, downloading from huggingface")

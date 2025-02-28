@@ -391,7 +391,7 @@ def get_text_stream(list_output, index, text_tokenizer):
     
 class OmniInference:
 
-    def __init__(self, ckpt_dir='./checkpoint', device='cuda:0'):
+    def __init__(self, ckpt_dir='./checkpoint', device='cpu'):
         self.device = device
         if not os.path.exists(ckpt_dir):
             print(f"checkpoint directory {ckpt_dir} not found, downloading from huggingface")
@@ -545,7 +545,7 @@ class OmniInference:
 
 
 def test_infer():
-    device = "cuda:0"
+    device = "cpu"
     out_dir = f"./output/{get_time_str()}"
     ckpt_dir = f"./checkpoint"
     if not os.path.exists(ckpt_dir):

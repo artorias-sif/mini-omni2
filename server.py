@@ -14,7 +14,7 @@ from inference_vision import OmniVisionInference
 
 class OmniChatServer(object):
     def __init__(self, ip='0.0.0.0', port=60808, run_app=True,
-                 ckpt_dir='./checkpoint', device='cuda:0') -> None:
+                 ckpt_dir='./checkpoint', device='cpu') -> None:
         server = Flask(__name__)
         # CORS(server, resources=r"/*")
         # server.config["JSON_AS_ASCII"] = False
@@ -30,8 +30,9 @@ class OmniChatServer(object):
             self.server = server
 
     def chat(self) -> Response:
-
+        print("request:",flask.request)
         req_data = flask.request.get_json()
+        print("req_data:",req_data)
         try:
             audio_data_buf = req_data["audio"].encode("utf-8")
             audio_data_buf = base64.b64decode(audio_data_buf)
@@ -85,7 +86,7 @@ def create_app():
     return server.server
 
 
-def serve(ip='0.0.0.0', port=60808, device='cuda:0'):
+def serve(ip='0.0.0.0', port=60808, device='cpu'):
 
     OmniChatServer(ip, port=port,run_app=True, device=device)
 

@@ -7,6 +7,7 @@ import base64
 import numpy as np
 import requests
 import io
+import ssl
 from pydub import AudioSegment
 
 
@@ -15,13 +16,18 @@ client = None
 
 if API_URL is None:
     from inference import OmniInference
-    omni_client = OmniInference('./checkpoint', 'cuda:0')
+    omni_client = OmniInference('./checkpoint', 'cpu')
     omni_client.warm_up()
 
 
 OUT_CHUNK = 4096
 OUT_RATE = 24000
 OUT_CHANNELS = 1
+
+# 创建一个不验证证书的 SSL 上下文
+ssl_context = ssl.create_default_context()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
 
 
 # Only needed if deploying on cloud provider
@@ -125,9 +131,9 @@ def main(port=None):
             )
             audio.on_additional_outputs(lambda c: c, outputs=[conversation])
     if port is not None:
-        demo.queue().launch(share=False, server_name="0.0.0.0", server_port=port)
+        demo.queue().launch(share=True, server_name="0.0.0.0", server_port=port)
     else:
-        demo.queue().launch()
+        demo.queue().launch(share=False,server_name="10.114.60.34",ssl_certfile="cert.pem", ssl_keyfile="key.pem",ssl_verify=False)
 
 
 if __name__ == "__main__":
